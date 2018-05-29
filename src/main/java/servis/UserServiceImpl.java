@@ -31,9 +31,7 @@ public class UserServiceImpl implements UserService {
                 User user = new User(name, iAge);
                 Image image = new Image(buffer);
                 user.setImage(image);
-                ImageDAO imageDAO = new ImageDAOImpl(em);
                 UserDAO userDAO = new UserDAOImpl(em);
-                imageDAO.addImage(image);
                 userDAO.add(user);
                 return true;
             }
