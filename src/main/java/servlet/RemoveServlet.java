@@ -27,7 +27,8 @@ public class RemoveServlet extends HttpServlet {
         String[] id = req.getParameterValues("rem");
         UserService service = new UserServiceImpl(em);
         try {
-            service.remove(id);
+            if (id != null)
+                service.remove(id);
         } finally {
             em.close();
         }

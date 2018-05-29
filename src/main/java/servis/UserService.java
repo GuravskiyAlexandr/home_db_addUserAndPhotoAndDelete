@@ -2,10 +2,12 @@ package servis;
 
 import entity.User;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 public interface UserService {
-    void add(String name, int age, byte[] buffer);
+    boolean add(String name, String age, InputStream stream) throws IOException;
 
     boolean remove(String[] id);
 

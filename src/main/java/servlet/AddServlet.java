@@ -6,14 +6,6 @@ package servlet;
  . Есть возможность выбрать N записей и одним нажатием кнопки Delete удалить их из базы.
  */
 
-import dao.ImageDAO;
-import dao.ImageDAOImpl;
-import dao.UserDAO;
-import dao.UserDAOImpl;
-import entity.Image;
-import entity.User;
-import servis.ImageService;
-import servis.ImageServiceImpl;
 import servis.UserService;
 import servis.UserServiceImpl;
 
@@ -40,32 +32,21 @@ public class AddServlet extends HttpServlet {
                      HttpServletResponse resp) throws ServletException, IOException {
         String name = req.getParameter("name");
         String age = req.getParameter("age");
-        System.out.println(req.getRequestURI());
         InputStream imageStream = req.getPart("image").getInputStream();
-
-        byte[] buffer = new byte[imageStream.available()];
-        imageStream.read(buffer, 0, imageStream.available());
-
-        int iAge = 0;
-        try {
-            iAge = Integer.parseInt(age);
-        } catch (Exception ex) {
-            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
 
         EntityManagerFactory emf = (EntityManagerFactory) getServletContext().getAttribute("emf");
         EntityManager em = emf.createEntityManager();
 
         UserService userService = new UserServiceImpl(em);
         try {
-            userService.add(name, iAge, buffer);
+            redirect = userService.add(name, age, imageStream);
         } finally {
             em.close();
         }
-
         if (redirect) {
             resp.sendRedirect("list");
+        } else {
+            resp.sendRedirect("index.jsp");
         }
     }
 }

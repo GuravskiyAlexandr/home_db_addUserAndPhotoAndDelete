@@ -8,8 +8,8 @@ import entity.Image;
 import entity.User;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
@@ -19,16 +19,26 @@ public class UserServiceImpl implements UserService {
         this.em = em;
     }
 
-    public void add(String name, int age, byte[] bytes) {
-        if (name.length() > 2 && age > 5) {
-            User user = new User(name, age);
-            Image image = new Image(bytes);
-            user.setImage(image);
-            ImageDAO imageDAO = new ImageDAOImpl(em);
-            UserDAO userDAO = new UserDAOImpl(em);
-            imageDAO.addImage(image);
-            userDAO.add(user);
+    public boolean add(String name, String age, InputStream stream) throws IOException {
+        if (!name.equals("") & !age.equals("")) {
+            InputStream st = stream;
+            byte[] buffer = new byte[st.available()];
+            st.read(buffer, 0, st.available());
+
+            int iAge = Integer.parseInt(age);
+
+            if (name.length() > 2 && iAge > 5) {
+                User user = new User(name, iAge);
+                Image image = new Image(buffer);
+                user.setImage(image);
+                ImageDAO imageDAO = new ImageDAOImpl(em);
+                UserDAO userDAO = new UserDAOImpl(em);
+                imageDAO.addImage(image);
+                userDAO.add(user);
+                return true;
+            }
         }
+        return false;
     }
 
     public boolean remove(String[] id) {
